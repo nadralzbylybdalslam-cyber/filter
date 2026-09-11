@@ -1,0 +1,56 @@
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+import dns.resolver
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/api/phone', methods=['GET'])
+def check_phone():
+    phone = request.args.get('number', '')
+    clean = ''.join(filter(str.isdigit, phone))
+    
+    if len(clean) < 9:
+        return jsonify({"error": "الرقم قصير جداً أو غير صالح"}), 400
+        
+    operator = "مشغل مسجل"
+    if clean.startswith(('050', '053', '055', '056', '96650', '96653', '96655', '96656')):
+        operator = "STC (الاتصالات السعودية)"
+    elif clean.startswith(('054', '058', '96654', '96658')):
+        operator = "Mobily (موبايلي)"
+    elif clean.startswith(('057', '059', '96657', '96659')):
+        operator = "Zain KSA (زين السعودية)"
+        
+    return jsonify({
+        "phone_clean": clean,
+        "operator": operator,
+        "status": "حقيقي - تم تحليل البادئة بنجاح"
+    })
+
+@app.route('/api/email', methods=['GET'])
+def check_email():
+    email = request.args.get('email', '')
+    if '@' not in email:
+        return jsonify({"error": "البريد الإلكتروني غير صحيح"}), 400
+        
+    domain = email.split('@')[1]
+    try:
+        records = dns.resolver.resolve(domain, 'MX')
+        mx_servers = [str(r.exchange) for r in records]
+        return jsonify({
+            "email": email,
+            "domain": domain,
+            "is_active": True,
+            "mx_servers": mx_servers,
+            "message": "النطاق يمتلك سيرفرات بريد نشطة وحقيقية"
+        })
+    except Exception as e:
+        return jsonify({
+            "email": email,
+            "domain": domain,
+            "is_active": False,
+            "error": "النطاق لا يستقبل رسائل بريدية أو غير موجود"
+        })
+
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)

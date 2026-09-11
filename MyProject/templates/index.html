@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>فِلتر | Filter Security Scanner</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #172554 0%,
+            #0b0f19 45%,
+            #05070c 100%
+        );
+
+    color: #f8fafc;
+
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+
+    padding: 25px 15px;
+}
+
+.container {
+
+    width: 100%;
+    max-width: 850px;
+    margin: auto;
+}
+
+.header {
+
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.logo {
+
+    font-size: 50px;
+    margin-bottom: 5px;
+}
+
+h1 {
+
+    margin: 0;
+
+    color: #38bdf8;
+
+    font-size: 34px;
+}
+
+.subtitle {
+
+    color: #94a3b8;
+
+    margin-top: 8px;
+
+    font-size: 14px;
+}
+
+.status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 12px;
+
+    padding: 7px 14px;
+
+    border-radius: 30px;
+
+    background: #0f172a;
+
+    border: 1px solid #1e293b;
+
+    color: #22c55e;
+
+    font-size: 13px;
+}
+
+.dot {
+
+    width: 8px;
+    height: 8px;
+
+    background: #22c55e;
+
+    border-radius: 50%;
+}
+
+.card {
+
+    background: rgba(15,23,42,.95);
+
+    border: 1px solid #263449;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.25);
+}
+
+.card h2 {
+
+    margin: 0 0 6px;
+
+    color: #38bdf8;
+
+    font-size: 19px;
+}
+
+.description {
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    margin-bottom: 15px;
+}
+
+input {
+
+    width: 100%;
+
+    background: #020617;
+
+    color: white;
+
+    border: 1px solid #334155;
+
+    border-radius: 9px;
+
+    padding: 13px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+input:focus {
+
+    border-color: #38bdf8;
+}
+
+button {
+
+    width: 100%;
+
+    margin-top: 10px;
+
+    padding: 13px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: #0284c7;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+button:hover {
+
+    background: #0369a1;
+}
+
+.secondary {
+
+    background: #1e293b;
+}
+
+.secondary:hover {
+
+    background: #334155;
+}
+
+.result {
+
+    display: none;
+
+    margin-top: 15px;
+
+    background: #020617;
+
+    border: 1px solid #263449;
+
+    border-radius: 10px;
+
+    padding: 16px;
+
+    line-height: 2;
+
+    font-size: 13px;
+
+    overflow-wrap: anywhere;
+}
+
+.result-title {
+
+    color: #38bdf8;
+
+    font-weight: bold;
+
+    font-size: 15px;
+
+    margin-bottom: 8px;
+}
+
+.row {
+
+    padding: 5px 0;
+
+    border-bottom:
+        1px solid rgba(51,65,85,.35);
+}
+
+.row:last-child {
+
+    border-bottom: 0;
+}
+
+.label {
+
+    color: #94a3b8;
+}
+
+.good {
+
+    color: #22c55e;
+}
+
+.warning {
+
+    color: #f59e0b;
+}
+
+.danger {
+
+    color: #ef4444;
+}
+
+.neutral {
+
+    color: #cbd5e1;
+}
+
+.score {
+
+    font-size: 27px;
+
+    font-weight: bold;
+
+    margin: 5px 0;
+}
+
+.badge {
+
+    display: inline-block;
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    background: #1e293b;
+}
+
+pre {
+
+    direction: ltr;
+
+    text-align: left;
+
+    white-space: pre-wrap;
+
+    background: #020617;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    color: #cbd5e1;
+
+    overflow-x: auto;
+}
+
+.contact-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+}
+
+.contact-list {
+
+    margin-top: 15px;
+}
+
+.contact-item {
+
+    background: #020617;
+
+    border: 1px solid #263449;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    margin-bottom: 8px;
+}
+
+.contact-item strong {
+
+    color: #38bdf8;
+}
+
+.delete {
+
+    width: auto;
+
+    padding: 5px 10px;
+
+    margin-top: 8px;
+
+    background: #7f1d1d;
+
+    font-size: 12px;
+}
+
+.footer {
+
+    max-width: 850px;
+
+    margin: 25px auto 0;
+
+    padding: 20px;
+
+    text-align: center;
+
+    color: #64748b;
+
+    border-top:
+        1px solid #1e293b;
+}
+
+.links {
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+.links a {
+
+    color: #38bdf8;
+
+    text-decoration: none;
+
+    padding: 7px 12px;
+
+    border: 1px solid #263449;
+
+    border-radius: 7px;
+}
+
+.links a:hover {
+
+    background: #0f172a;
+}
+
+.loading {
+
+    color: #38bdf8;
+
+    text-align: center;
+}
+
+@media(max-width:600px) {
+
+    body {
+        padding: 15px 10px;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="logo">
+            🛡️
+        </div>
+
+        <h1>
+            فِلتر
+        </h1>
+
+        <div class="subtitle">
+            Filter Security Scanner
+        </div>
+
+        <div class="status">
+
+            <span class="dot"></span>
+
+            API جاهز
+
+        </div>
+
+    </div>
+
+
+    <!-- PHONE -->
+
+    <div class="card">
+
+        <h2>
+            📱 فحص رقم الجوال
+        </h2>
+
+        <div class="description">
+
+            تحليل صيغة الرقم والدولة والنوع
+            والمشغل المتوقع.
+
+            لا يتم كشف هوية صاحب الرقم.
+
+        </div>
+
+        <input
+            id="phoneInput"
+            type="text"
+            placeholder="مثال: 0551234567"
+        >
+
+        <button
+            onclick="checkPhone()"
+        >
+            فحص الرقم
+        </button>
+
+        <div
+            id="phoneResult"
+            class="result"
+        ></div>
+
+    </div>
+
+
+    <!-- URL -->
+
+    <div class="card">
+
+        <h2>
+            🌐 فحص الرابط
+        </h2>
+
+        <div class="description">
+
+            تحليل HTTP/HTTPS وTLS
+            والترويسات والتحويلات.
+
+        </div>
+
+        <input
+            id="urlInput"
+            type="text"
+            placeholder="https://example.com"
+        >
+
+        <button
+            onclick="checkUrl()"
+        >
+            فحص الرابط
+        </button>
+
+        <div
+            id="urlResult"
+            class="result"
+        ></div>
+
+    </div>
+
+
+    <!-- EMAIL -->
+
+    <div class="card">
+
+        <h2>
+            📧 فحص البريد
+        </h2>
+
+        <div class="description">
+
+            تحليل DNS وMX وSPF وDMARC.
+
+        </div>
+
+        <input
+            id="emailInput"
+            type="email"
+            placeholder="test@example.com"
+        >
+
+        <button
+            onclick="checkEmail()"
+        >
+            فحص البريد
+        </button>
+
+        <div
+            id="emailResult"
+            class="result"
+        ></div>
+
+    </div>
+
+
+    <!-- DNS -->
+
+    <div class="card">
+
+        <h2>
+            🔎 فحص DNS
+        </h2>
+
+        <div class="description">
+
+            عرض سجلات DNS الأساسية.
+
+        </div>
+
+        <input
+            id="dnsInput"
+            type="text"
+            placeholder="example.com"
+        >
+
+        <button
+            onclick="checkDNS()"
+        >
+            فحص DNS
+        </button>
+
+        <div
+            id="dnsResult"
+            class="result"
+        ></div>
+
+    </div>
+
+
+    <!-- TLS -->
+
+    <div class="card">
+
+        <h2>
+            🔐 فحص TLS
+        </h2>
+
+        <div class="description">
+
+            تحليل شهادة TLS وإصدار البروتوكول
+            والجهة المصدرة.
+
+        </div>
+
+        <input
+            id="tlsInput"
+            type="text"
+            placeholder="example.com"
+        >
+
+        <button
+            onclick="checkTLS()"
+        >
+            فحص TLS
+        </button>
+
+        <div
+            id="tlsResult"
+            class="result"
+        ></div>
+
+    </div>
+
+
+    <!-- CONTACT BOOK -->
+
+    <div class="card">
+
+        <h2>
+            📒 دفتر الأرقام الخاص
+        </h2>
+
+        <div class="description">
+
+            أضف الأرقام التي تملكها أو جهات اتصالك
+            إلى قاعدة البيانات المحلية.
+
+        </div>
+
+        <div class="contact-grid">
+
+            <input
+                id="contactPhone"
+                type="text"
+                placeholder="رقم الهاتف"
+            >
+
+            <input
+                id="contactName"
+                type="text"
+                placeholder="الاسم"
+            >
+
+        </div>
+
+        <input
+            id="contactNote"
+            type="text"
+            placeholder="ملاحظة اختيارية"
+        >
+
+        <button
+            onclick="addContact()"
+        >
+            إضافة جهة اتصال
+        </button>
+
+        <button
+            class="secondary"
+            onclick="loadContacts()"
+        >
+            تحديث دفتر الأرقام
+        </button>
+
+        <div
+            id="contacts"
+            class="contact-list"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<div class="footer">
+
+    <div>
+        <strong>فِلتر | Filter</strong>
+        — Security Scanner v3.0
+    </div>
+
+    <div style="margin-top:6px">
+
+        تطوير:
+        <strong>Al-Aslami | الأسلمي</strong>
+
+    </div>
+
+    <div class="links">
+
+        <a
+            href="https://youtube.com/@silent_breach"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            YouTube
+        </a>
+
+        <a
+            href="https://www.tiktok.com/@silent_breach1"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            TikTok
+        </a>
+
+        <a
+            href="https://discord.gg/svKbV7PtQ"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Discord
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API = window.location.origin;
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function showResult(id, html) {
+
+    const div =
+        document.getElementById(id);
+
+    div.style.display = "block";
+
+    div.innerHTML = html;
+}
+
+
+function loading(id) {
+
+    showResult(
+        id,
+        `<div class="loading">
+            ⏳ جاري الفحص...
+         </div>`
+    );
+}
+
+
+async function apiGet(path) {
+
+    const response =
+        await fetch(API + path);
+
+    let data;
+
+    try {
+
+        data =
+            await response.json();
+
+    } catch {
+
+        throw new Error(
+            "استجابة غير صالحة من الخادم"
+        );
+    }
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.error ||
+            "حدث خطأ أثناء الفحص"
+        );
+    }
+
+    return data;
+}
+
+
+/* =====================================================
+   PHONE
+===================================================== */
+
+async function checkPhone() {
+
+    const value =
+        document.getElementById(
+            "phoneInput"
+        ).value.trim();
+
+    if (!value) {
+
+        showResult(
+            "phoneResult",
+            `<span class="danger">
+                أدخل رقم الهاتف أولاً.
+             </span>`
+        );
+
+        return;
+    }
+
+    loading("phoneResult");
+
+    try {
+
+        const data =
+            await apiGet(
+                `/api/phone?q=${encodeURIComponent(value)}`
+            );
+
+        let contact = "";
+
+        if (data.contact) {
+
+            contact = `
+                <div class="row">
+                    <span class="label">
+                        الاسم المخزن:
+                    </span>
+
+                    <strong>
+                        ${escapeHTML(
+                            data.contact.name
+                        )}
+                    </strong>
+                </div>
+
+                <div class="row">
+                    <span class="label">
+                        الملاحظة:
+                    </span>
+
+                    ${escapeHTML(
+                        data.contact.note || "-"
+                    )}
+                </div>
+            `;
+        }
+
+        showResult(
+            "phoneResult",
+
+            `
+            <div class="result-title">
+                نتيجة تحليل الرقم
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    الرقم:
+                </span>
+
+                ${escapeHTML(data.input)}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    الرقم المنظم:
+                </span>
+
+                ${escapeHTML(
+                    data.normalized
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    الدولة:
+                </span>
+
+                ${escapeHTML(
+                    data.country
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    النوع:
+                </span>
+
+                ${escapeHTML(
+                    data.type
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    البادئة:
+                </span>
+
+                ${escapeHTML(
+                    data.prefix || "-"
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    المشغل المتوقع:
+                </span>
+
+                ${escapeHTML(
+                    data.operator_hint
+                )}
+            </div>
+
+            ${contact}
+
+            <div class="row neutral">
+                ℹ️ ${escapeHTML(
+                    data.privacy
+                )}
+            </div>
+            `
+        );
+
+    } catch (error) {
+
+        showResult(
+            "phoneResult",
+            `<span class="danger">
+                ❌ ${escapeHTML(
+                    error.message
+                )}
+             </span>`
+        );
+    }
+}
+
+
+/* =====================================================
+   URL
+===================================================== */
+
+function verdictClass(verdict) {
+
+    if (verdict === "منخفض الخطورة")
+        return "good";
+
+    if (verdict === "مؤشرات خطورة")
+        return "danger";
+
+    if (verdict === "يحتاج مراجعة")
+        return "warning";
+
+    return "neutral";
+}
+
+
+async function checkUrl() {
+
+    const value =
+        document.getElementById(
+            "urlInput"
+        ).value.trim();
+
+    if (!value) {
+
+        showResult(
+            "urlResult",
+            `<span class="danger">
+                أدخل الرابط أولاً.
+             </span>`
+        );
+
+        return;
+    }
+
+    loading("urlResult");
+
+    try {
+
+        const data =
+            await apiGet(
+                `/api/url?q=${encodeURIComponent(value)}`
+            );
+
+        const assessment =
+            data.assessment || {};
+
+        const cls =
+            verdictClass(
+                assessment.verdict
+            );
+
+        const reasons =
+            (assessment.reasons || [])
+            .map(
+                x =>
+                    `• ${escapeHTML(x)}`
+            )
+            .join("<br>");
+
+        showResult(
+            "urlResult",
+
+            `
+            <div class="result-title">
+                نتيجة تحليل الرابط
+            </div>
+
+            <div class="score ${cls}">
+                ${escapeHTML(
+                    assessment.score ?? 0
+                )}/100
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    التقييم:
+                </span>
+
+                <span class="badge ${cls}">
+                    ${escapeHTML(
+                        assessment.verdict ||
+                        "غير حاسم"
+                    )}
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    الدومين:
+                </span>
+
+                ${escapeHTML(
+                    data.domain
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    HTTP:
+                </span>
+
+                ${escapeHTML(
+                    data.status_code
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    HTTPS:
+                </span>
+
+                ${
+                    data.https
+                    ? "✅ مفعل"
+                    : "❌ غير مفعل"
+                }
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    TLS:
+                </span>
+
+                ${
+                    data.tls?.valid_connection
+                    ? "✅ صالح للاتصال"
+                    : "⚠️ لم يتم التحقق"
+                }
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    زمن الاستجابة:
+                </span>
+
+                ${escapeHTML(
+                    data.response_time_ms
+                )} ms
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Server:
+                </span>
+
+                ${escapeHTML(
+                    data.server || "-"
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    الأسباب:
+                </span>
+
+                <div>
+                    ${
+                        reasons ||
+                        "لا توجد ملاحظات"
+                    }
+                </div>
+            </div>
+
+            <div class="row neutral">
+                ℹ️ ${escapeHTML(
+                    data.disclaimer || ""
+                )}
+            </div>
+            `
+        );
+
+    } catch (error) {
+
+        showResult(
+            "urlResult",
+            `<span class="danger">
+                ❌ ${escapeHTML(
+                    error.message
+                )}
+             </span>`
+        );
+    }
+}
+
+
+/* =====================================================
+   EMAIL
+===================================================== */
+
+async function checkEmail() {
+
+    const value =
+        document.getElementById(
+            "emailInput"
+        ).value.trim();
+
+    if (!value) {
+
+        showResult(
+            "emailResult",
+            `<span class="danger">
+                أدخل البريد أولاً.
+             </span>`
+        );
+
+        return;
+    }
+
+    loading("emailResult");
+
+    try {
+
+        const data =
+            await apiGet(
+                `/api/email?q=${encodeURIComponent(value)}`
+            );
+
+        const security =
+            data.email_security || {};
+
+        showResult(
+            "emailResult",
+
+            `
+            <div class="result-title">
+                نتيجة تحليل البريد
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    البريد:
+                </span>
+
+                ${escapeHTML(
+                    data.email
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    النطاق:
+                </span>
+
+                ${escapeHTML(
+                    data.domain
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    DNS:
+                </span>
+
+                ${
+                    data.summary?.domain_resolves
+                    ? "✅ يعمل"
+                    : "❌ غير موجود"
+                }
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    MX:
+                </span>
+
+                ${
+                    data.summary?.mail_server_exists
+                    ? "✅ موجود"
+                    : "❌ غير موجود"
+                }
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    SPF:
+                </span>
+
+                ${
+                    data.summary?.spf_present
+                    ? "✅ موجود"
+                    : "⚠️ غير موجود"
+                }
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    DMARC:
+                </span>
+
+                ${
+                    data.summary?.dmarc_present
+                    ? "✅ موجود"
+                    : "⚠️ غير موجود"
+                }
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    MX Records:
+                </span>
+
+                <pre>${escapeHTML(
+                    (
+                        data.dns?.MX || []
+                    ).join("\n") ||
+                    "لا يوجد"
+                )}</pre>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    SPF Records:
+                </span>
+
+                <pre>${escapeHTML(
+                    (
+                        security.SPF?.records || []
+                    ).join("\n") ||
+                    "لا يوجد"
+                )}</pre>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    DMARC Records:
+                </span>
+
+                <pre>${escapeHTML(
+                    (
+                        security.DMARC?.records || []
+                    ).join("\n") ||
+                    "لا يوجد"
+                )}</pre>
+            </div>
+            `
+        );
+
+    } catch (error) {
+
+        showResult(
+            "emailResult",
+            `<span class="danger">
+                ❌ ${escapeHTML(
+                    error.message
+                )}
+             </span>`
+        );
+    }
+}
+
+
+/* =====================================================
+   DNS
+===================================================== */
+
+async function checkDNS() {
+
+    const value =
+        document.getElementById(
+            "dnsInput"
+        ).value.trim();
+
+    if (!value) {
+
+        showResult(
+            "dnsResult",
+            `<span class="danger">
+                أدخل النطاق أولاً.
+             </span>`
+        );
+
+        return;
+    }
+
+    loading("dnsResult");
+
+    try {
+
+        const data =
+            await apiGet(
+                `/api/dns?q=${encodeURIComponent(value)}`
+            );
+
+        let html = `
+            <div class="result-title">
+                سجلات DNS
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    النطاق:
+                </span>
+
+                ${escapeHTML(
+                    data.domain
+                )}
+            </div>
+        `;
+
+        for (
+            const [type, records]
+            of Object.entries(
+                data.records || {}
+            )
+        ) {
+
+            html += `
+                <div class="row">
+
+                    <span class="label">
+                        ${escapeHTML(type)}:
+                    </span>
+
+                    <pre>${escapeHTML(
+                        records.length
+                        ? records.join("\n")
+                        : "لا توجد سجلات"
+                    )}</pre>
+
+                </div>
+            `;
+        }
+
+        showResult(
+            "dnsResult",
+            html
+        );
+
+    } catch (error) {
+
+        showResult(
+            "dnsResult",
+            `<span class="danger">
+                ❌ ${escapeHTML(
+                    error.message
+                )}
+             </span>`
+        );
+    }
+}
+
+
+/* =====================================================
+   TLS
+===================================================== */
+
+async function checkTLS() {
+
+    const value =
+        document.getElementById(
+            "tlsInput"
+        ).value.trim();
+
+    if (!value) {
+
+        showResult(
+            "tlsResult",
+            `<span class="danger">
+                أدخل النطاق أولاً.
+             </span>`
+        );
+
+        return;
+    }
+
+    loading("tlsResult");
+
+    try {
+
+        const data =
+            await apiGet(
+                `/api/tls?q=${encodeURIComponent(value)}`
+            );
+
+        const cert =
+            data.certificate || {};
+
+        showResult(
+            "tlsResult",
+
+            `
+            <div class="result-title">
+                تحليل شهادة TLS
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    النطاق:
+                </span>
+
+                ${escapeHTML(
+                    data.domain
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    IP:
+                </span>
+
+                ${escapeHTML(
+                    data.ip
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    إصدار TLS:
+                </span>
+
+                <strong class="good">
+                    ${escapeHTML(
+                        data.tls_version || "-"
+                    )}
+                </strong>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Cipher:
+                </span>
+
+                ${escapeHTML(
+                    data.cipher || "-"
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Issuer:
+                </span>
+
+                ${escapeHTML(
+                    cert.issuer?.organizationName ||
+                    cert.issuer?.commonName ||
+                    "-"
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Subject:
+                </span>
+
+                ${escapeHTML(
+                    cert.subject?.commonName ||
+                    "-"
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    صالح من:
+                </span>
+
+                ${escapeHTML(
+                    cert.valid_from || "-"
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    صالح إلى:
+                </span>
+
+                ${escapeHTML(
+                    cert.valid_until || "-"
+                )}
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    SAN:
+                </span>
+
+                <pre>${escapeHTML(
+                    (
+                        cert.san || []
+                    ).join("\n") ||
+                    "لا يوجد"
+                )}</pre>
+            </div>
+            `
+        );
+
+    } catch (error) {
+
+        showResult(
+            "tlsResult",
+            `<span class="danger">
+                ❌ ${escapeHTML(
+                    error.message
+                )}
+             </span>`
+        );
+    }
+}
+
+
+/* =====================================================
+   CONTACT BOOK
+===================================================== */
+
+async function addContact() {
+
+    const phone =
+        document.getElementById(
+            "contactPhone"
+        ).value.trim();
+
+    const name =
+        document.getElementById(
+            "contactName"
+        ).value.trim();
+
+    const note =
+        document.getElementById(
+            "contactNote"
+        ).value.trim();
+
+    if (!phone || !name) {
+
+        alert(
+            "أدخل الرقم والاسم."
+        );
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/api/contacts`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        phone,
+                        name,
+                        note
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "تعذر إضافة جهة الاتصال"
+            );
+        }
+
+        document.getElementById(
+            "contactPhone"
+        ).value = "";
+
+        document.getElementById(
+            "contactName"
+        ).value = "";
+
+        document.getElementById(
+            "contactNote"
+        ).value = "";
+
+        await loadContacts();
+
+    } catch (error) {
+
+        alert(error.message);
+    }
+}
+
+
+async function loadContacts() {
+
+    const container =
+        document.getElementById(
+            "contacts"
+        );
+
+    container.innerHTML =
+        `<div class="loading">
+            ⏳ جاري التحميل...
+         </div>`;
+
+    try {
+
+        const data =
+            await apiGet(
+                "/api/contacts"
+            );
+
+        if (!data.contacts?.length) {
+
+            container.innerHTML =
+                `<div class="neutral">
+                    لا توجد جهات اتصال محفوظة.
+                 </div>`;
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        data.contacts.forEach(
+            contact => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+                item.className =
+                    "contact-item";
+
+                item.innerHTML = `
+
+                    <strong>
+                        ${escapeHTML(
+                            contact.name
+                        )}
+                    </strong>
+
+                    <div>
+                        📱
+                        ${escapeHTML(
+                            contact.phone
+                        )}
+                    </div>
+
+                    <div>
+                        📝
+                        ${escapeHTML(
+                            contact.note || "-"
+                        )}
+                    </div>
+
+                    <button
+                        class="delete"
+                        onclick="deleteContact(
+                            ${Number(contact.id)}
+                        )"
+                    >
+                        حذف
+                    </button>
+                `;
+
+                container.appendChild(
+                    item
+                );
+            }
+        );
+
+    } catch (error) {
+
+        container.innerHTML =
+            `<span class="danger">
+                ❌ ${escapeHTML(
+                    error.message
+                )}
+             </span>`;
+    }
+}
+
+
+async function deleteContact(id) {
+
+    if (
+        !confirm(
+            "هل تريد حذف جهة الاتصال؟"
+        )
+    ) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/api/contacts/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "فشل الحذف"
+            );
+        }
+
+        await loadContacts();
+
+    } catch (error) {
+
+        alert(error.message);
+    }
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadContacts();
+
+</script>
+
+</body>
+
+</html>
